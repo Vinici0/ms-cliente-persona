@@ -7,6 +7,7 @@ import org.borja.springcloud.msvc.clients.msclients.dto.client.ClientResponseDto
 import org.borja.springcloud.msvc.clients.msclients.exceptions.ResourceNotFoundException;
 import org.borja.springcloud.msvc.clients.msclients.models.Client;
 import org.borja.springcloud.msvc.clients.msclients.repositories.ClientRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ public class ClientService implements IClientService {
     private static final Logger log = LoggerFactory.getLogger(ClientService.class);
     private final ClientRepository clientRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @Override
     public Mono<ClientResponseDto> addClient(ClientRequestDto clientDto) {
@@ -93,6 +95,7 @@ public class ClientService implements IClientService {
                 .doOnSuccess(result -> log.info("Client disabled successfully with ID: {}", id))
                 .then();
     }
+
 
     private Client convertToEntity(ClientRequestDto dto) {
         Client client = new Client();
