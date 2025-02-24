@@ -11,9 +11,6 @@ import org.borja.springcloud.msvc.clients.msclients.repositories.ClientRepositor
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -27,8 +24,6 @@ public class ClientService implements IClientService {
     private final ClientRepository clientRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    KafkaTemplate<String, Client> kafkaTemplateResponse;
 
     @Override
     public Mono<ClientResponseDto> addClient(ClientRequestDto clientDto) {
@@ -99,32 +94,6 @@ public class ClientService implements IClientService {
                 })
                 .doOnSuccess(result -> log.info("Client disabled successfully with ID: {}", id))
                 .then();
-    }
-
-    @KafkaListener(topics = "accountTopic", groupId = "client-group")
-    public void listen(Client client) {
-        log.info("Client ID received from Kafka: {}", client.getId());
-        Mono<ClientResponseDto> clientResponseDtoMono = getClientById(client.getId());
-
-        clientResponseDtoMono.subscribe(clientResponseDto -> {
-            if (clientResponseDto != null) {
-                Client completeClient = new Client();
-                completeClient.setId(clientResponseDto.getId());
-                completeClient.setClientId(clientResponseDto.getClientId());
-                completeClient.setName(clientResponseDto.getName());
-                completeClient.setGender(clientResponseDto.getGender());
-                completeClient.setAge(clientResponseDto.getAge());
-                completeClient.setIdentification(clientResponseDto.getIdentification());
-                completeClient.setAddress(clientResponseDto.getAddress());
-                completeClient.setPhone(clientResponseDto.getPhone());
-
-                // Enviar la respuesta completa a un tópico de respuesta
-                kafkaTemplateResponse.send("clientResponseTopic", completeClient);
-                log.info("Complete client sent: {}", completeClient);
-            } else {
-                log.warn("Client not found for ID: {}", client.getId());
-            }
-        });
     }
 
 

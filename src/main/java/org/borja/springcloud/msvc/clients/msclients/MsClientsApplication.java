@@ -18,7 +18,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@EnableKafka
 @EnableR2dbcRepositories
 @SpringBootApplication
 public class MsClientsApplication {
@@ -27,23 +26,4 @@ public class MsClientsApplication {
         SpringApplication.run(MsClientsApplication.class, args);
     }
 
-
-    //Para que Kafka pueda deserializar el objeto que recibe
-    @Bean
-    public ConsumerFactory<String, Client> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, "false");
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, Client.class);
-        return new DefaultKafkaConsumerFactory<>(props);
-    }
-    //Se instancia el listener para que pueda escuchar los mensajes que llegan a Kafka
-    @Bean
-    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Client>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Client> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
-    }
 }
