@@ -1,21 +1,17 @@
 package org.borja.springcloud.msvc.clients.msclients.controllers;
 
-import org.borja.springcloud.msvc.clients.msclients.dto.client.ClientRequestDto;
 import org.borja.springcloud.msvc.clients.msclients.dto.client.ClientResponseDto;
 import org.borja.springcloud.msvc.clients.msclients.models.enums.Gender;
 import org.borja.springcloud.msvc.clients.msclients.services.client.IClientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
