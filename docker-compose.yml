@@ -2,21 +2,26 @@ version: "3.8"
 
 services:
   app:
-    image: testcodevinicio2/ms-cliente:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: msvc_client_app
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+    
     environment:
-      - SPRING_APPLICATION_NAME=${SPRING_APPLICATION_NAME}
-      - SERVER_PORT=${SERVER_PORT}
-      - API_PREFIX=${API_PREFIX}
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
+      SPRING_APPLICATION_NAME: ${SPRING_APPLICATION_NAME}
+      SERVER_PORT: ${SERVER_PORT}
+      API_PREFIX: ${API_PREFIX}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
     depends_on:
       - postgres
+    
     networks:
       - mynetwork
 
@@ -29,8 +34,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    
     networks:
       - mynetwork
 
